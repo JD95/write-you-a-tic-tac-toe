@@ -441,7 +441,7 @@ data Bool = True | False
 
 While boolean values are primative types in other langauges, with sum types they can just be defined in the standard library. Another example could be to distinguish between Operating Systems.
 
-```hasekll
+```haskell
 data OS = MACOS | WINDOWS | LINUX
 ```
 
@@ -451,7 +451,7 @@ Useful anytime you need to have several options and want to encode them directly
 
 As your types become more complicated, you code becomes uglier and harder to read. Luckily, Haskell provides some useful shortcuts for dealing with complex data types.
 
-```hasekll
+```haskell
 data Language = Cpp | Java | C | Python | Haskell
 
 helloWorld = \l -> case l of { Cpp -> "cout << \"hello world\";"; Java -> "System.out.console.write(\"Hello world\");"; C -> "printf(\"hello world\");"; Python -> "print(\"hello world\")"; Haksell -> print \"Hello world\"";}
