@@ -135,12 +135,15 @@ Functions with multiple arguements simply apply them one at a time
 10
 ```
 
-- Multi-argument lambdas work in exactly the same way (since they are the same)
-  - (\first last -> first ++ " " ++ last) "Tom" "Riddle"
-  - (\"Tom" last -> "Tom" ++ " " ++ last) "Riddle"
-  - (\"Tom" "Riddle" -> "Tom" ++ " " ++ "Riddle")
-  - "Tom" ++ " " ++ "Riddle"
-  - "Tom Riddle"
+Multi-argument lambdas work in exactly the same way (since they are the same)
+
+```haskell
+(\first last -> first ++ " " ++ last) "Tom" "Riddle"
+(\"Tom" last -> "Tom" ++ " " ++ last) "Riddle"
+(\"Tom" "Riddle" -> "Tom" ++ " " ++ "Riddle")
+"Tom" ++ " " ++ "Riddle"
+"Tom Riddle"
+```
 
 ### Bool
 - There is another data type which is useful for evaluation
