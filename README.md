@@ -505,7 +505,9 @@ Types let you encode objects from the real world into your program where you can
 
 It is possible to create a new type which wraps any type.
 
-`data Wrap a = Wrap a`
+```haskell
+data Wrap a = Wrap a
+```
 
 Not very exciting, except for the lowercase a on the left side of the equals.
 This is a *type* parameter to the data. Just as functions are able take values,
