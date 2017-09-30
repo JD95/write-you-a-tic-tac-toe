@@ -215,7 +215,7 @@ What happens if you don't give a function all of it's inputs? Remember that eval
 11
 ```
 
-# Generating Lists (Ana)
+# Generating Lists
 
 `[1..]`
 
@@ -526,7 +526,7 @@ So a list is either an element with another list or an empty list.
 ## Integration
 ## Synthesis
 
-# Typeclasses (Cata)
+# Typeclasses 
 ## Exposition
 
 In your experiments with haskell so far you might have noticed strange functions like `print :: Show a => a -> IO ()` or `(+) :: Num a => a -> a -> a`
