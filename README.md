@@ -453,10 +453,8 @@ As your types become more complicated, you code becomes uglier and harder to rea
 
 ```hasekll
 data Language = Cpp | Java | C | Python | Haskell
-```
 
-```haskell
-    helloWorld = \l -> case l of { Cpp -> "cout << \"hello world\";"; Java -> "System.out.console.write(\"Hello world\");"; C -> "printf(\"hello world\");"; Python -> "print(\"hello world\")"; Haksell -> print \"Hello world\"";}
+helloWorld = \l -> case l of { Cpp -> "cout << \"hello world\";"; Java -> "System.out.console.write(\"Hello world\");"; C -> "printf(\"hello world\");"; Python -> "print(\"hello world\")"; Haksell -> print \"Hello world\"";}
 ```
 
 Goes wayyy of the page right? So one way to deal with this is to take advantage of the fact that we can move the lambda to the *other* side of the equal sign.
@@ -474,24 +472,24 @@ id a = a
 The nice thing about this is we can now pattern match on the value.
 
 ```haskell
-    isZero 0 = True
-    isZero _ = False
+isZero 0 = True
+isZero _ = False
 ```
 
 which is the same as writing
 
 ```haskell
-    isZero = \n -> case n of {0 -> True; _ -> False;}
+isZero = \n -> case n of {0 -> True; _ -> False;}
 ```
 
 So, rewriting our `helloWorld` example
 
 ```haskell
-    helloWorld Cpp = "cout << \"hello world\";"
-    helloWorld Java = "System.out.console.write(\"Hello world\");"
-    helloWorld C = "printf(\"hello world\");"
-    helloWorld Python = "print(\"hello world\")"
-    helloWorld Haksell = "print \"Hello world\""
+helloWorld Cpp = "cout << \"hello world\";"
+helloWorld Java = "System.out.console.write(\"Hello world\");"
+helloWorld C = "printf(\"hello world\");"
+helloWorld Python = "print(\"hello world\")"
+helloWorld Haksell = "print \"Hello world\""
 ```
 
 In my opinion, this looks much nicer.
