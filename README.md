@@ -224,39 +224,57 @@ g . f = \x -> g (f x)
 
 # Generating Lists
 
-`[1..]`
+```haskell
+[1..]
+```
 
 This is the notation for defining a list of all numbers from 1 to infinity.
 
-`take :: Int -> [a] -> [a]`
+```haskell
+take :: Int -> [a] -> [a]
+```
 
 Gives a list with only the first n elements of the list.
 
-`takeWhile :: (a -> Bool) -> [a] -> [a]`
+```haskell
+takeWhile :: (a -> Bool) -> [a] -> [a]
+```
 
 Uses elements from the front of the list while the predicate is satisfied.
 
-`drop :: Int -> [a] -> [a]`
+```haskell
+drop :: Int -> [a] -> [a]
+```
 
 Gives a list without the first n elements.
 
-`dropWhile :: (a -> Bool) -> [a] -> [a]`
+```haskell
+dropWhile :: (a -> Bool) -> [a] -> [a]
+```
 
 Uses elements from the front of the list while the predicate is satisfied.
 
-`iterate :: (a -> a) -> a -> [a]`
+```haskell
+iterate :: (a -> a) -> a -> [a]
+```
 
 Uses a some function and iterates it on the initial value a.
 
-`repeat :: a -> [a]`
+```haskell
+repeat :: a -> [a]
+```
 
 An infinite list with repeating values of a.
 
-`replicate :: Int -> a -> [a]`
+```haskell
+replicate :: Int -> a -> [a]
+```
 
 A finite list with repeating values of a.
 
-`cycle :: [a] -> [a]`
+```haskell
+cycle :: [a] -> [a]
+```
 
 Given some list, create an infinite list with the inital list repeating.
 
@@ -269,35 +287,51 @@ Given some list, create an infinite list with the inital list repeating.
 
 # Transforming Lists (Meta)
 
-`map :: (a -> b) -> [a] -> [b]`
+```haskell
+map :: (a -> b) -> [a] -> [b]
+```
 
 Transforms each element of a list using some function.
 
-`filter :: (a -> Bool) -> [a] -> [a]`
+```haskell
+filter :: (a -> Bool) -> [a] -> [a]
+```
 
 A new list with only the elements that satisfy the predicate.
 
-`reverse :: [a] -> [a]`
+```haskell
+reverse :: [a] -> [a]
+```
 
 A list with the elements reversed.
 
-`intersperse :: a -> [a] -> [a]`
+```haskell
+intersperse :: a -> [a] -> [a]
+```
 
 A list with some value placed between each element.
 
-`intercalate :: [a] -> [[a]] -> [a]`
+```haskell
+intercalate :: [a] -> [[a]] -> [a]
+```
 
 A list with another list placed between each element.
 
-`transpose :: [[a]] -> [[a]]`
+```haskell
+transpose :: [[a]] -> [[a]]
+```
 
 Rotates a list of lists. A 3x2 list becomes a 2x3.
 
-`subsequences :: [a] -> [[a]]`
+```haskell
+subsequences :: [a] -> [[a]]
+```
 
 All possible subsequences of a list
 
-`permutations :: [a] -> [[a]]`
+```haskell
+permutations :: [a] -> [[a]]
+```
 
 All possible permutations of the elements of a list.
 
@@ -307,39 +341,57 @@ All possible permutations of the elements of a list.
 
 # Folding Lists
 
-`foldr :: (b -> a -> b) -> b -> [a] -> b`
+```haskell
+foldr :: (b -> a -> b) -> b -> [a] -> b
+```
 
 Using some function and an inital value, combine all the elements of a list.
 
-`concat :: [[a]] -> [a]`
+```haskell
+concat :: [[a]] -> [a]
+```
 
 Given a list of lists, create a new list with all the elements from each list.
 
-`concatMap :: (a -> [b]) -> [a] -> [b]`
+```haskell
+concatMap :: (a -> [b]) -> [a] -> [b]
+```
 
 Apply some function which generates a list to each element and then concatenate the results.
 
-`and :: [Bool] -> Bool`
+```haskell
+and :: [Bool] -> Bool
+```
 
 Given a list of Bool values, fold the list using &&.
 
-`or :: [Bool] -> Bool`
+```haskell
+or :: [Bool] -> Bool
+```
 
 Given a list of Bool values, fold the list using ||.
 
-`any :: (a -> Bool) -> [a] -> Bool`
+```haskell
+any :: (a -> Bool) -> [a] -> Bool
+```
 
 Whether any value of some list satisfies some predicate.
 
-`all :: (a -> Bool) -> [a] -> Bool`
+```haskell
+all :: (a -> Bool) -> [a] -> Bool
+```
 
 Whether all elements of a list satisfy a predicate.
 
-`mapM_ :: (a -> IO b) -> [a] -> IO ()`
+```haskell
+mapM_ :: (a -> IO b) -> [a] -> IO ()
+```
 
 Perform an `IO` action using every element of a list.
 
-`forM_ :: [a] -> (a -> IO b) -> IO ()`
+```haskell
+forM_ :: [a] -> (a -> IO b) -> IO ()
+```
 
 The same as `mapM_` but with the arugements flipped.
 
@@ -405,7 +457,9 @@ Just like in a case expression, `_` can be used to indicate values you don't car
 
 If you want to name the items in your product type you can specify them like this
 
-`data Person = Person { name :: String, age :: Int, height :: Double }`
+```haskell
+data Person = Person { name :: String, age :: Int, height :: Double }
+```
 
 Now you can extract a value from a `Person` by using the functions for each value.
 
