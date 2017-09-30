@@ -78,8 +78,8 @@ Lambdas represent transformations from values of one type to values of another.
 - Common math operations are also allowed
 - `(\x -> (x + 1) * (3 / x) - 4)`
   - Parenthesis group things just like in math
-- The function (++) lets you combine two Strings `(\first -> (\last -> first ++ last))`
-- The function (:) lets you attach a Char to the front of a string `(\x -> x : "ookies!")`
+- The function `(++)` lets you combine two Strings `(\first -> (\last -> first ++ last))`
+- The function `(:)` lets you attach a Char to the front of a string `(\x -> x : "ookies!")`
 
 ### Type Signature
 
@@ -94,7 +94,7 @@ Lambdas represent transformations from values of one type to values of another.
 
 ## Interactions
 
-- The math operators (+,-,/,*) are just lambdas with symbols for names
+- The math operators `(+,-,/,*)` are just lambdas with symbols for names
 - You can create your own lambdas with funny names by putting the symbol in ()
 - There is a shortcut for making a lambda with multiple arguemsnts `(\x y -> x + y)`
 
@@ -168,7 +168,7 @@ While this isn't the best way to solve the problem of dividing by zero, we can p
 
 ### If Then Else
 - Like multi-arguement functions there is a shorthand way to write case expressions that choose results based on a Bool value
-- The syntax would be like this `(\x y -> if isZero y then 0 else x /y; })`
+- The syntax would be like this `(\x y -> if isZero y then 0 else x /y)`
   - Which reads a bit better than the case expression
 
 ### Basic Comparisons
@@ -334,11 +334,11 @@ Whether all elements of a list satisfy a predicate.
 
 `mapM_ :: (a -> IO b) -> [a] -> IO ()`
 
-Perform an ~IO~ action using every element of a list.
+Perform an `IO` action using every element of a list.
 
 `forM_ :: [a] -> (a -> IO b) -> IO ()`
 
-The same as ~mapM_~ but with the arugements flipped.
+The same as `mapM_` but with the arugements flipped.
 
 ## Interaction
 - summations
@@ -349,3 +349,234 @@ The same as ~mapM_~ but with the arugements flipped.
 
 Folds can collapse a list down to a single result, but they can also be thought of as "sequencing" events, as in forM_ and mapM_. So lists are not only a means of holding "values", but also a means of structuring the execution of IO actions.
 
+
+# Creating New Types (Ana)
+
+### type
+
+You can give aliases for other types.
+
+`type Name = String`
+
+This is useful for when you wait to clarify what a value really represents. This is typically called "aliasing"
+
+### newtype
+
+If you want a stronger version of aliasing, then you can use a `newtype`
+
+`newtype Name = Name String`
+
+Now you "wrapped" the String type, meaning that a `Name` is not equal to a `String`
+
+### Product Types
+
+A general way of grouping values together is a tuple
+
+`(5,5)` is a tuple of two Integers.
+
+Tuples are convient when you want to return multiple values from a function.
+
+You can also create a named tuple with `data`
+
+`data Coord = Coord Int Int`
+
+A `Coord` is just a grouping of two Integers, but it is not the same as `(Int, Int)`
+
+You can use pattern matching to extract the values from product types.
+
+```haskell
+    up :: Coord -> Coord
+    up = \(Coord x y) -> Coord x (y + 1)
+
+    resetY :: Coord -> Coord
+    resetY = \(Coord x _) -> Coord x 0
+```
+
+Just like in a case expression, `_` can be used to indicate values you don't care about and  match to anything.
+
+If you want to name the items in your product type you can specify them like this
+
+`data Person = Person { name :: String, age :: Int, height :: Double }`
+
+Now you can extract a value from a `Person` by using the functions for each value.
+
+```haskell
+    over18 :: Person -> Bool
+    over18 = \p -> age p > 18
+```
+
+### Sum types
+
+Sometimes you want to represent data which can be one of many things which might have different values.
+
+`data Computer = Desktop { ram :: Int, cpu :: String } | Phone { screenSize :: Double, serviceProvider :: String}`
+
+So Computer is *either* a `Desktop` *or* a `Phone`.
+
+In order to work with product types you'll need to use case expressions because you can't know exactly which version of Computer it is beforehand.
+
+```haskell
+    upgrade :: Computer -> Computer
+    upgrade = \c -> case c of {Desktop r c -> Desktop (r + 1) c; Phone s p -> Phone (s + 1) p;}
+```
+
+Sum types don't necessesarily need to wrap any values, they can also be used as a sort of "tag". You've already used a type like this if you've used `Bool` before.
+
+`data Bool = True | False`
+
+While boolean values are primative types in other langauges, with sum types they can just be defined in the standard library. Another example could be to distinguish between Operating Systems.
+
+`data OS = MACOS | WINDOWS | LINUX`
+
+Useful anytime you need to have several options and want to encode them directly instead of using something like `Int` or `String` to do so indirectly.
+
+## Integration
+
+As your types become more complicated, you code becomes uglier and harder to read. Luckily, Haskell provides some useful shortcuts for dealing with complex data types.
+
+`data Language = Cpp | Java | C | Python | Haskell`
+
+```haskell
+    helloWorld = \l -> case l of { Cpp -> "cout << \"hello world\";"; Java -> "System.out.console.write(\"Hello world\");"; C -> "printf(\"hello world\");"; Python -> "print(\"hello world\")"; Haksell -> print \"Hello world\"";}
+```
+
+Goes wayyy of the page right? So one way to deal with this is to take advantage of the fact that we can move the lambda to the *other* side of the equal sign.
+
+`id = \a -> a`
+
+is the same as
+
+`id a = a`
+
+The nice thing about this is we can now pattern match on the value.
+
+```haskell
+    isZero 0 = True
+    isZero _ = False
+```
+
+which is the same as writing
+
+```haskell
+    isZero = \n -> case n of {0 -> True; _ -> False;}
+```
+
+So, rewriting our `helloWorld` example
+
+```haskell
+    helloWorld Cpp = "cout << \"hello world\";"
+    helloWorld Java = "System.out.console.write(\"Hello world\");"
+    helloWorld C = "printf(\"hello world\");"
+    helloWorld Python = "print(\"hello world\")"
+    helloWorld Haksell = "print \"Hello world\""
+```
+
+In my opinion, this looks much nicer.
+
+## Synthesis
+
+Types let you encode objects from the real world into your program where you can work with them. Product types represent a collection of values while Sum types can be one of many different types.
+
+* Generic Types (Meta)
+## Exposition
+
+It is possible to create a new type which wraps any type.
+
+`data Wrap a = Wrap a`
+
+Not very exciting, except for the lowercase a on the left side of the equals.
+This is a *type* parameter to the data. Just as functions are able take values,
+types can also take parameters to create new types.
+
+```haskell
+    wrappedInt :: Wrap Int
+    wrappedInt = Wrap 5
+
+    wrappedChar :: Wrap Char
+    wrappedChar = Wrap 'c'
+
+    wrappedBool :: Wrap Bool
+    wrappedBool = Wrap False
+```
+
+The `Wrap a` type isn't very useful since it really only acts like a super `newtype`, however there is a type similar to it which is useful.
+
+### Maybe
+
+`data Maybe a = Just a | Nothing`
+
+Maybe is useful for encoding the possibility of failure within your program. For example, what happens when you divide by zero? Normall this will just crash the program, but if you wrap the return type of division with `Maybe` you can deal with the fact that it fails.
+
+```haskell
+    division :: Int -> Int -> Maybe Int
+    division x 0 = Nothing
+    division x y = Just (x `div` y)
+```
+
+Now, there will never be any divison by zero. If zero is given for `y`, the result will be Nothing and the program can continue.
+
+### List
+
+Lists are actually defined as a generic data type as well, which isn't all that suprising given that we can have a list of anything.
+
+`data [a] = a : [a] | []`
+
+So a list is either an element with another list or an empty list.
+
+## Integration
+## Synthesis
+
+# Typeclasses (Cata)
+## Exposition
+
+In your experiments with haskell so far you might have noticed strange functions like `print :: Show a => a -> IO ()` or `(+) :: Num a => a -> a -> a`
+
+As we learned previously, the lowercase types are type parameters. Which means that they could be any type. Often times, you can't do much with a completely generic type. For example the type `(a -> a)` only has one function associated with it, `id`.
+
+In order to make generic functions more useful, we can define what is called a `typeclass`. Type classes are ways of ensure that generic types support certain functions. The simplest of these is the `Show` typeclass.
+
+### Show
+
+```haskell
+    class Show a where
+        show :: a -> String
+```
+
+This creates a new type class. Any type which is a part of `Show` *must* define a version of the function `show` for that type.
+
+```haskell
+    instance Show OS where
+        show MACOS = "MACOS"
+        show WINDOWS = "WINDOWS"
+        show LINUX = "LINUX"
+```
+
+When you want to add a type to a type class, you must make an `instance` of all the functions for that class. Above we defined show for the `OS` type from earlier.
+
+### Eq
+
+Another useful type class is `Eq` which means that values within that type can be compared.
+
+```haskell
+    instance Eq Os where
+        MACOS == MACOS = True
+        WINDOWS == WINDOWS = True
+        LINUX == LINUX = True
+        _ == _ = False
+``` 
+
+In the above example, we define what it means for two `OS` values to be equal.
+
+## Integration
+
+Type classes can also be used in the context of creating a data type.
+
+```haskell
+data Show a => User a = User {name :: a, posts :: [String]}
+```
+
+Although this is a contrived example, it shows how we can restrict the types used in generic data types.
+
+## Synthesis
+
+Generic types allow us to create general and abstract representations of our data and type classes allow us to ensure certain capabilities of the generic types.
