@@ -180,7 +180,8 @@ While this isn't the best way to solve the problem of dividing by zero, we can p
 - `&&` means logical and, it takes two Booleans and, if they are both True, also returns true (anything else is False)
 - `||` means logical or, it takes two Bool values and if either are True it will return True, False otherwise
 
-## Interaction
+
+## Food for thought 
 
 What happens if you don't give a function all of it's inputs? Remember that evaluation just supsitutes the values one at a time. There is no reason stopping half way should break anything.
 
@@ -195,11 +196,17 @@ What happens if you don't give a function all of it's inputs? Remember that eval
 
 - If you have a bunch of functions applied to eachother (a (b (c (d input)))), you can rewrite it without the parenthesis using the ($) function. So `a $ b $ c $ d $ input`
 
-## Synthesis
 - Lambdas are data types just like String, Int, and Bool, is there a way to add them?
-- `(\g f -> (\x -> g (f x)))`
-- There is already a function that does this called (.)
-- `g . f = \x -> g (f x)`
+```haskell
+(\g f -> (\x -> g (f x)))
+```
+
+There is already a function that does this called (.)
+
+```haskell
+g . f = \x -> g (f x)
+```
+
 - From before with many functions applied to the results of other functions we can rewrite to something like this: `a . b . c . d $ input`
   - Here, everything to the left of $ is the composition of a, b, c, and d
   - The input value will flow left through each of these functions, getting transformed by each
@@ -253,13 +260,11 @@ A finite list with repeating values of a.
 
 Given some list, create an infinite list with the inital list repeating.
 
-## Interaction
+## Food for thought
 - Drop and iterate can be used to grab sections of a list
   - What are the first five letters after g?
   - take 5 . dropWhile ((/=) 'g') $ ['a'..]
 - Iterate lets us generate arithmetic and geometric sequences
-
-## Synthesis
 - You can use individual elements and simple rules to generate finite and infinte lists of values. Often times, this will be your method of setting up other functions.
 
 # Transforming Lists (Meta)
@@ -296,14 +301,12 @@ All possible subsequences of a list
 
 All possible permutations of the elements of a list.
 
-## Interaction
+## Food for thought
 - map and filter can be used "query" lists
-
-## Synthesis
 - List comprehensions are shorthands for this. Most programs will consist of generating a basic list of values, then transforming that list into something more suited for your particular problem.
 
-# Folding Lists (Cata)
-## Exposition
+# Folding Lists
+
 `foldr :: (b -> a -> b) -> b -> [a] -> b`
 
 Using some function and an inital value, combine all the elements of a list.
@@ -350,13 +353,15 @@ The same as `mapM_` but with the arugements flipped.
 Folds can collapse a list down to a single result, but they can also be thought of as "sequencing" events, as in forM_ and mapM_. So lists are not only a means of holding "values", but also a means of structuring the execution of IO actions.
 
 
-# Creating New Types (Ana)
+# Creating New Types
 
 ### type
 
 You can give aliases for other types.
 
-`type Name = String`
+```haskell
+type Name = String
+```
 
 This is useful for when you wait to clarify what a value really represents. This is typically called "aliasing"
 
@@ -364,7 +369,9 @@ This is useful for when you wait to clarify what a value really represents. This
 
 If you want a stronger version of aliasing, then you can use a `newtype`
 
-`newtype Name = Name String`
+```haskell
+newtype Name = Name String
+```
 
 Now you "wrapped" the String type, meaning that a `Name` is not equal to a `String`
 
@@ -378,18 +385,20 @@ Tuples are convient when you want to return multiple values from a function.
 
 You can also create a named tuple with `data`
 
-`data Coord = Coord Int Int`
+```haskell
+data Coord = Coord Int Int
+```
 
 A `Coord` is just a grouping of two Integers, but it is not the same as `(Int, Int)`
 
 You can use pattern matching to extract the values from product types.
 
 ```haskell
-    up :: Coord -> Coord
-    up = \(Coord x y) -> Coord x (y + 1)
+up :: Coord -> Coord
+up = \(Coord x y) -> Coord x (y + 1)
 
-    resetY :: Coord -> Coord
-    resetY = \(Coord x _) -> Coord x 0
+resetY :: Coord -> Coord
+resetY = \(Coord x _) -> Coord x 0
 ```
 
 Just like in a case expression, `_` can be used to indicate values you don't care about and  match to anything.
@@ -401,32 +410,40 @@ If you want to name the items in your product type you can specify them like thi
 Now you can extract a value from a `Person` by using the functions for each value.
 
 ```haskell
-    over18 :: Person -> Bool
-    over18 = \p -> age p > 18
+over18 :: Person -> Bool
+over18 = \p -> age p > 18
 ```
 
 ### Sum types
 
 Sometimes you want to represent data which can be one of many things which might have different values.
 
-`data Computer = Desktop { ram :: Int, cpu :: String } | Phone { screenSize :: Double, serviceProvider :: String}`
+```haskell
+data Computer 
+  = Desktop { ram :: Int, cpu :: String } 
+  | Phone { screenSize :: Double, serviceProvider :: String}
+```
 
 So Computer is *either* a `Desktop` *or* a `Phone`.
 
 In order to work with product types you'll need to use case expressions because you can't know exactly which version of Computer it is beforehand.
 
 ```haskell
-    upgrade :: Computer -> Computer
-    upgrade = \c -> case c of {Desktop r c -> Desktop (r + 1) c; Phone s p -> Phone (s + 1) p;}
+upgrade :: Computer -> Computer
+upgrade = \c -> case c of {Desktop r c -> Desktop (r + 1) c; Phone s p -> Phone (s + 1) p;}
 ```
 
 Sum types don't necessesarily need to wrap any values, they can also be used as a sort of "tag". You've already used a type like this if you've used `Bool` before.
 
-`data Bool = True | False`
+```haskell
+data Bool = True | False
+```
 
 While boolean values are primative types in other langauges, with sum types they can just be defined in the standard library. Another example could be to distinguish between Operating Systems.
 
-`data OS = MACOS | WINDOWS | LINUX`
+```hasekll
+data OS = MACOS | WINDOWS | LINUX
+```
 
 Useful anytime you need to have several options and want to encode them directly instead of using something like `Int` or `String` to do so indirectly.
 
@@ -434,7 +451,9 @@ Useful anytime you need to have several options and want to encode them directly
 
 As your types become more complicated, you code becomes uglier and harder to read. Luckily, Haskell provides some useful shortcuts for dealing with complex data types.
 
-`data Language = Cpp | Java | C | Python | Haskell`
+```hasekll
+data Language = Cpp | Java | C | Python | Haskell
+```
 
 ```haskell
     helloWorld = \l -> case l of { Cpp -> "cout << \"hello world\";"; Java -> "System.out.console.write(\"Hello world\");"; C -> "printf(\"hello world\");"; Python -> "print(\"hello world\")"; Haksell -> print \"Hello world\"";}
@@ -442,11 +461,15 @@ As your types become more complicated, you code becomes uglier and harder to rea
 
 Goes wayyy of the page right? So one way to deal with this is to take advantage of the fact that we can move the lambda to the *other* side of the equal sign.
 
-`id = \a -> a`
+```haskell
+id = \a -> a
+```
 
 is the same as
 
-`id a = a`
+```haskell
+id a = a
+```
 
 The nice thing about this is we can now pattern match on the value.
 
@@ -477,7 +500,7 @@ In my opinion, this looks much nicer.
 
 Types let you encode objects from the real world into your program where you can work with them. Product types represent a collection of values while Sum types can be one of many different types.
 
-* Generic Types (Meta)
+* Generic Types
 ## Exposition
 
 It is possible to create a new type which wraps any type.
@@ -503,7 +526,9 @@ The `Wrap a` type isn't very useful since it really only acts like a super `newt
 
 ### Maybe
 
-`data Maybe a = Just a | Nothing`
+```haskell
+data Maybe a = Just a | Nothing
+```
 
 Maybe is useful for encoding the possibility of failure within your program. For example, what happens when you divide by zero? Normall this will just crash the program, but if you wrap the return type of division with `Maybe` you can deal with the fact that it fails.
 
@@ -519,7 +544,9 @@ Now, there will never be any divison by zero. If zero is given for `y`, the resu
 
 Lists are actually defined as a generic data type as well, which isn't all that suprising given that we can have a list of anything.
 
-`data [a] = a : [a] | []`
+```haskell
+data [a] = a : [a] | []
+```
 
 So a list is either an element with another list or an empty list.
 
