@@ -24,14 +24,36 @@ By the end of the project you'll have experience with:
 - Representing Failure with Maybe
 - Type Signatures
 
-# Primitive Data Types 
+# Intro
 
-The initial problem of programming is figuring out how to represent your problem in a way that the computer can understand it. A smart tactic is to first encode the objects involved with the problem and then attempt to encode  the transformations of those objects into the result.
+All real world problems have two things: nouns and verbs. We want *cars* to *drive themselves*. We want to *recognize* the *faces* in *pictures*. The process of programming involves converting the problems into a language that the computer can understand and act on. Unfortunately, computers aren't yet at the point to be able to completely understand human intent, so programmers still have jobs (for now). That job typically entails of extracting the nouns and verbs of a problem and then finding a way to represent those on the computer.
+
+For example, how could we represent a person? Obviously we could model every *single* molecule in their body, but programmers are lazy and often the problems we solve don't care about *that* level of specificity. Lets think about what information you might use to describe a person you saw to someone else.
+
+They were:
+- Tall
+- Blond Hair
+- Kinda Heavy
+- Had Green Eyes
+
+That's a fairly good description, probably enough to identify someone with. Computers like specific details whenever possible though, so lets modify our description a bit.
+
+They were:
+- Height: 6 feet, 3 inches
+- Hair Color: Blond
+- Weight: 210 pounds
+- Eye Color: Green
+- Name: Taylor Doe
+- Age: 27 years
+
+So more specific in this case meant including numbers and units in a few cases. Computers like numbers, a lot. People on the other hand want to be more expressive. To this end, Haskell comes with a few different kind of values to talk about.
+
+# Primitive Data Types 
 
 ### Int
 
 - Numbers transfer directly into programming
-- Almost all programming langues have integers as a datatype
+- Almost all programming langues have integers
 
 ### Double
 
@@ -47,29 +69,23 @@ The initial problem of programming is figuring out how to represent your problem
 ### String
 
 - Just a collection of characters
-
-## Interactions
-
-- Can represent coordinates with numbers
-- String and Double can be units of measurement
-
-## Synthesis
-- How can you represent a person in a program?
-- Height (Double)
-- Age (Int)
-- Name (String)
-- Hair Color (String / Int)
-- Gender (Char)
-- Types can be used to build up a representation of something in the real world
-- We can thus "encode" real things into our programs
+- Useful for things like names
 
 ## The Types of the Game?
 
 What types could we use to represent the game of tic tac toe?
 
-# Lambdas
+Well, players usually are marked as either `X` or `O`, so that can be a `Char`. We could possibly represent the board using some kind of string:
 
-As was mentioned before, all programs are made of two things: nouns and *verbs*. Now that we have a familiarity with how we can represent the nouns of the game, lets think about how we can represent the actions taken within our program.
+"xox"
+"oox"
+"xxo"
+
+It's a start, but we have a ways to go yet.
+
+# Functions
+
+As was mentioned before, all programs are made of two things: nouns and *verbs*. Now that we have a familiarity with how we can represent nouns, lets think about how we can represent the actions taken within our program.
 
 In functional programming, all actions are mappings of some input value to some output value. Give me an apple, I'll give you an orange. Give me some money, I'll give you a cake. To short hand describing these mappings, haskell uses something called a "lambda" expression.
 
@@ -193,9 +209,7 @@ That's a five move checkmate >:]
 We can use this list of moves idea in tac tic toe as well. For every move, we simply need to know who made the move and on what space they put that move. We can talk about specific spaces using coordinates like so:
 
 0,0 | 0,1 | 0,2
----------------
 1,0 | 1,1 | 1,2
----------------
 2,0 | 2,1 | 2,2
 
 So our moves can be represented like this: (X, 0, 0), (O, 1, 2), ...
