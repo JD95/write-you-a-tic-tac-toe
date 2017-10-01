@@ -26,9 +26,7 @@ By the end of the project you'll have experience with:
 
 # Intro
 
-All real world problems have two things: nouns and verbs. We want *cars* to *drive themselves*. We want to *recognize* the *faces* in *pictures*. The process of programming involves converting the problems into a language that the computer can understand and act on. Unfortunately, computers aren't yet at the point to be able to completely understand human intent, so programmers still have jobs (for now). That job typically entails of extracting the nouns and verbs of a problem and then finding a way to represent those on the computer.
-
-For example, how could we represent a person? Obviously we could model every *single* molecule in their body, but programmers are lazy and often the problems we solve don't care about *that* level of specificity. Lets think about what information you might use to describe a person you saw to someone else.
+All real world problems have two things: nouns and verbs. We want *cars* to *drive themselves*. We want to *recognize* the *faces* in *pictures*. The process of programming involves converting the problems into a language that the computer can understand and act on. Unfortunately, computers aren't yet at the point to be able to completely understand human intent, so programmers still have jobs (for now). For example, how could we represent a person? Obviously we could model every *single* molecule in their body, but programmers are lazy and often the problems we solve don't care about *that* level of specificity. Lets think about what information you might use to describe a person you saw to someone else.
 
 They were:
 - Tall
