@@ -46,7 +46,7 @@ They were:
 - Name: Taylor Doe
 - Age: 27 years
 
-So more specific in this case meant including numbers and units in a few cases. Computers like numbers, a lot. People on the other hand want to be more expressive. To this end, Haskell comes with a few different kind of values to talk about.
+So more specific in this case meant including numbers and units in a few cases. Computers like numbers, a lot. People on the other hand want to be more expressive. To this end, Haskell comes with a few different kinds of values to talk about.
 
 # Primitive Data Types 
 
@@ -77,9 +77,11 @@ What types could we use to represent the game of tic tac toe?
 
 Well, players usually are marked as either `X` or `O`, so that can be a `Char`. We could possibly represent the board using some kind of string:
 
+```haskell
 "xox"
 "oox"
 "xxo"
+```
 
 It's a start, but we have a ways to go yet.
 
@@ -208,9 +210,11 @@ That's a five move checkmate >:]
 
 We can use this list of moves idea in tac tic toe as well. For every move, we simply need to know who made the move and on what space they put that move. We can talk about specific spaces using coordinates like so:
 
+```haskell
 0,0 | 0,1 | 0,2
 1,0 | 1,1 | 1,2
 2,0 | 2,1 | 2,2
+```
 
 So our moves can be represented like this: (X, 0, 0), (O, 1, 2), ...
 
