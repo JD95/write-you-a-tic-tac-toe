@@ -44,7 +44,7 @@ They were:
 - Name: Taylor Doe
 - Age: 27 years
 
-So more specific in this case meant including numbers and units in a few cases. Computers like numbers, a lot. People on the other hand want to be more expressive. To this end, Haskell comes with a few different kinds of values to talk about.
+So more specific in this case meant including numbers and units in a few cases. Computers like numbers, a lot. People on the other hand want to be more expressive. To this end, Haskell comes with a few different kinds of values to talk about. [rephrase ex. In haskell the values we used to describe things are called 'data types']
 
 # Primitive Data Types 
 
@@ -69,7 +69,7 @@ So more specific in this case meant including numbers and units in a few cases. 
 - Just a collection of characters
 - Useful for things like names
 
-## The Types of the Game?
+## The Types of the Game? [may be better to say tic tac toe instead of 'the game' i.e. Types for tic tac toe]
 
 What types could we use to represent the game of tic tac toe?
 
@@ -85,9 +85,9 @@ It's a start, but we have a ways to go yet.
 
 # Functions
 
-As was mentioned before, all programs are made of two things: nouns and *verbs*. Now that we have a familiarity with how we can represent nouns, lets think about how we can represent the actions taken within our program.
+As was mentioned before, all programs are made of two things: nouns and *verbs* [data and functions]. Now that we have a familiarity with how we can represent nouns, lets think about how we can represent the actions taken within our program.
 
-In functional programming, all actions are mappings of some input value to some output value. Give me an apple, I'll give you an orange. Give me some money, I'll give you a cake. To short hand describing these mappings, haskell uses something called a "lambda" expression.
+In functional programming, all actions are mappings of some input value to some output value. Give me an apple, I'll give you an orange. Give me some money, I'll give you a cake. To short hand describing these mappings [rephrase], haskell uses something called a "lambda" expression.
 
 ```haskell
 \ x y z -> x y (x z) 
@@ -135,7 +135,7 @@ Here, we could map something like "Pie" to "Pie is the best!". What if we had a 
 
 Now, just because we haven't been writing out what the types of the inputs and outputs are explicitly, they have been there all along. Haskell is smart enough to figure out what you are talking about based on what you actually do with the inputs. For example, if you were to use `+` the compiler would know that your inputs had to be numbers because it doesn't make sense to add things which are not numbers.
 
-Because programmers are human, we like to not have to think as hard as the compiler when just reading the code. To this end, we can actually give names to our lambda values and also explicitly write out their types.
+Because [because not needed] programmers are human, we like to not have to think as hard as the compiler when just reading the code. To this end, we can actually give names to our lambda values and also explicitly write out their types. [type signatures help the compiler too]
 
 The syntax for the type signature for a function called addOne which takes an Int and transforms it into an int would be:
 
@@ -143,12 +143,13 @@ The syntax for the type signature for a function called addOne which takes an In
 addOne :: Int -> Int
 addOne = \ x  -> x + 1
 ```
-The top line reads "addOne has the type Int to Int". The `::` is read as "has the type". Notice how the (->) symbol matches up with the arrow in the lambda. There is no rule that says they must visually line up, but I wanted to draw the parallel with how the arrow is used in the *value* of the lambda and the *type*.
+The top line reads "addOne has the type Int to Int". The `::` is read as "has the type". Notice how the (->) symbol matches up with the arrow in the lambda. There is no rule that says they must visually line up, but I wanted [want] to draw the parallel with how the arrow is used in the *value* of the lambda and the *type*. [rephrase 'Ive lined up the arrows to show ...']
 
 ### Multiple Arguments
 
 - In order to pass multiple values into a function, you'll have to nest lambda functions
-- For example `(\x -> (\y -> x + y))`, which takes a value x and then transforms it into a lambda function which takes a value y and transforms it into the expression `x + y`
+- For example `(\x -> (\y -> x + y))`, which takes a value x and then transforms it into a lambda function which takes a value y and transforms it into the expression `x + y` [lambdas can return functions, might want to flesh this out more. Its kinda a werid concept if comming from an imperative language]
+
 - There is a shortcut for making a lambda with multiple arguemsnts `(\x y -> x + y)`
 
 
@@ -194,15 +195,15 @@ Multi-argument lambdas work in exactly the same way (since they are the same).
 
 So lambdas are evaluated, not so much as a series of steps, but rather as the mechanical replacing of symbols with inputs and then replacing the lambda with the result. This continues until you are only left with a value and can reduce no further, at which point the program is done!
 
-## Using Lambdas for the Game
+## Using Lambdas for the Game [tic tac toe]
 
-A few math expressions and combining strings is all well and good, but how can we get from here to actually using lambdas to represent the game of tic tac toe? Indulge me for a moment as I get a bit philosophical, but isn't every action simply a mapping from some moment in the past to some moment in the future? Movies, as you probably know, are just a *ton* of pictures played rapidly, one after the other. The "action" of playing the movie is kinda just a mapping from some time to some picture. 0:00:00 maps to the start of the movie, 1:14:27 maps to some picture in the middle, and 11:23:59 maps to the last picture of the Lord of The Rings extended blue-ray.
+A few math expressions and combining strings is all well and good, but how can we get from here to actually using lambdas to represent the game of tic tac toe? [new paragraph] Indulge me for a moment as I get a bit philosophical, but isn't every action simply a mapping from some moment in the past to some moment in the future? Movies, as you probably know, are just a *ton* of pictures played rapidly, one after the other. The "action" of playing the movie is kinda just a mapping from some time to some picture. 0:00:00 maps to the start of the movie, 1:14:27 maps to some picture in the middle, and 11:23:59 [lol] maps to the last picture of the Lord of The Rings extended blue-ray.
 
 In this same way, video games can be thought of as mappings to pictures. However, video games use a combination of time and user input to determine what picture to give you. When playing mario, the character remains still until the character presses a button. The game then takes that input and gives you a new picture with mario moved slightly. 
 
-Board games are even easier. Any game of chess can be reproduced by just having a list of moves made by each player. Then "playing the game" is just mapping the moves to new boards.
+Board games are even easier. Any game of chess can be reproduced by just having a list of moves made by each player. Then "playing the game" is just mapping the moves to new boards. [could connect this to the verb/ noun analogy, nouns are moves verb is updating the game based on the moves]
 
-For example: e4 e5, Qf3 f5, Bc4 fxe4, Qf7#
+For example: e4 e5, Qf3 f5, Bc4 fxe4, Qf7# [ i just tried this on lichess, if only they would have followed along :<]
 
 That's a five move checkmate >:]
 
@@ -222,7 +223,7 @@ That's definitely a starting place, but tic tac toe is usually played by people 
 
 Sometimes, we want our mapping to change based on what is given to us. For example, if a customer has a discount, we want to give them the discounted prices instead of the normal ones. In order to make these kinds of choices, we'll need another type called `Bool`. There are only two possible values of a `Bool`: `True` or `False`. This allows us to say things like, "if it is true that the customer has a discount, then give the discounted prices, otherwise give the normal prices".
 
-An application near and dear to our hearts at the moment is whether or not to end the game. If one of the players has one or the board is full, end the game, otherwise give the next state of the board.
+An application near and dear to our hearts at the moment is whether or not to end the game. If one of the players has one or the board is full, end the game, otherwise give the next state of the board. [whats this have to do with bools?]
 
 ### Case Expressions
 
@@ -247,7 +248,7 @@ Like multi-arguement functions there is a shorthand way to write case expression
 ```haskell
 (\x y -> if isZero y then 0 else x /y)
 ```
-- Which reads a bit better than the case expression
+- Which reads a bit better than the case expression [this could go in the bool section and you could reference it when writing the case verion above]
 
 ### Basic Comparisons
 - There are some built in functions which deal with generating True or False values. These "logic" and "comparison" operators are as follows
@@ -271,9 +272,10 @@ What happens if you don't give a function all of it's inputs? Remember that eval
 
 `(5 +) = ((+) 5) = (\x -> 5 + x)`
 
-- If you have a bunch of functions applied to eachother (a (b (c (d input)))), you can rewrite it without the parenthesis using the ($) function. So `a $ b $ c $ d $ input`
+- If you have a bunch of functions applied to eachother (a (b (c (d input)))), you can rewrite it without the parenthesis using the ($) function. So `a $ b $ c $ d $ input` [ive usually seen this explained in terms of right associativity]
 
-- Lambdas are data types just like String, Int, and Bool, is there a way to add them?
+- Lambdas are data types just like String, Int, and Bool, is there a way to add them? [I thought lambdas were verbs? and datatypes were nouns]
+
 ```haskell
 (\g f -> (\x -> g (f x)))
 ```
@@ -374,7 +376,7 @@ data Computer
 
 So Computer is *either* a `Desktop` *or* a `Phone`.
 
-In order to work with product types you'll need to use case expressions because you can't know exactly which version of Computer it is beforehand.
+In order to work with product [sum] types you'll need to use case expressions because you can't know exactly which version of Computer it is beforehand.
 
 ```haskell
 upgrade :: Computer -> Computer
@@ -440,7 +442,7 @@ helloWorld Python = "print(\"hello world\")"
 helloWorld Haksell = "print \"Hello world\""
 ```
 
-In my opinion, this looks much nicer.
+In my opinion, this looks much nicer. [it is fact! XD]
 
 ## Representing the Game
 
@@ -465,7 +467,7 @@ data Move = Move
 [1..]
 ```
 
-This is the notation for defining a list of all numbers from 1 to infinity.
+This is the notation for defining a list of all numbers from 1 to infinity. [this could be confusing for people who don't know what lazy evaluation is, expecially if they type it in a repl!, may want to add a warning/ more explination]
 
 ```haskell
 take :: Int -> [a] -> [a]
@@ -507,7 +509,7 @@ An infinite list with repeating values of a.
 replicate :: Int -> a -> [a]
 ```
 
-A finite list with repeating values of a.
+A finite list with repeating values of a. [Int times]
 
 ```haskell
 cycle :: [a] -> [a]
@@ -518,7 +520,7 @@ Given some list, create an infinite list with the inital list repeating.
 ## Food for thought
 - Drop and iterate can be used to grab sections of a list
   - What are the first five letters after g?
-  - take 5 . dropWhile ((/=) 'g') $ ['a'..]
+  - take 5 . dropWhile ((/=) 'g') $ ['a'..] 
 - Iterate lets us generate arithmetic and geometric sequences
 - You can use individual elements and simple rules to generate finite and infinte lists of values. Often times, this will be your method of setting up other functions.
 
@@ -582,7 +584,7 @@ All possible permutations of the elements of a list.
 foldr :: (b -> a -> b) -> b -> [a] -> b
 ```
 
-Using some function and an inital value, combine all the elements of a list.
+Using some function and an inital value, combine all the elements of a list. 
 
 ```haskell
 concat :: [[a]] -> [a]
@@ -670,7 +672,7 @@ printBoard :: [Move] -> IO ()
 printBoard = mapM_ putStrLn . showBoard . filledBoard
 ```
 
-# Generic Types
+# Generic Types [might want to put this before 'Representing the game', as a lot of the funcitons listed use generics]
 
 It is possible to create a new type which wraps any type.
 
@@ -709,7 +711,7 @@ division x 0 = Nothing
 division x y = Just (x `div` y)
 ```
 
-Now, there will never be any divison by zero. If zero is given for `y`, the result will be Nothing and the program can continue.
+Now, there will never be any divison by zero. If zero is given for `y`, the result will be Nothing and the program can continue. [how is this different from using a bool?, could compare with the example above]
 
 ### List
 
@@ -721,6 +723,8 @@ data [a] = a : [a] | []
 
 So a list is either an element with another list or an empty list.
 
+[could use length as an example of a function what dosen't care what is in a list]
+
 # Typeclasses 
 
 In your experiments with haskell so far you might have noticed strange functions like `print :: Show a => a -> IO ()` or `(+) :: Num a => a -> a -> a`
@@ -728,6 +732,8 @@ In your experiments with haskell so far you might have noticed strange functions
 As we learned previously, the lowercase types are type parameters. Which means that they could be any type. Often times, you can't do much with a completely generic type. For example the type `(a -> a)` only has one function associated with it, `id`.
 
 In order to make generic functions more useful, we can define what is called a `typeclass`. Type classes are ways of ensure that generic types support certain functions. The simplest of these is the `Show` typeclass.
+
+[could talk about how to have ghc do some of this automatically, i.e. deriving Show ... ]
 
 ### Show
 
@@ -770,7 +776,7 @@ lineWin [] = False
 lineWin (E:_) = False
 lineWin (first:rest) = (rest /= emptyLine) && all (first ==) rest
   where emptyLine = replicate (length rest) E
-
+.
 rowWin :: [[Space]] -> Bool
 -- ^ Check if any line has been won
 rowWin = any lineWin
