@@ -44,7 +44,7 @@ They were:
 - Name: Taylor Doe
 - Age: 27 years
 
-So more specific in this case meant including numbers and units in a few cases. Computers like numbers, a lot. People on the other hand want to be more expressive. To this end, Haskell comes with a few different kinds of values to talk about.
+So more specific in this case meant including numbers and units in a few cases. Computers like numbers, a lot. People on the other hand want to be more expressive. To this end, Haskell comes with a few different kinds of values to talk about called "data types".
 
 # Primitive Data Types 
 
@@ -69,7 +69,7 @@ So more specific in this case meant including numbers and units in a few cases. 
 - Just a collection of characters
 - Useful for things like names
 
-## The Types of the Game?
+## The Types of Tic Tac Toe?
 
 What types could we use to represent the game of tic tac toe?
 
@@ -85,9 +85,9 @@ It's a start, but we have a ways to go yet.
 
 # Functions
 
-As was mentioned before, all programs are made of two things: nouns and *verbs*. Now that we have a familiarity with how we can represent nouns, lets think about how we can represent the actions taken within our program.
+As was mentioned before, all programs are made of two things: nouns and *verbs*. In programming these two concepts are called data and functions. Now that we have a familiarity with how we can represent nouns with data types, lets think about how we can represent the actions taken within our program as functions.
 
-In functional programming, all actions are mappings of some input value to some output value. Give me an apple, I'll give you an orange. Give me some money, I'll give you a cake. To short hand describing these mappings, haskell uses something called a "lambda" expression.
+In functional programming, all actions are mappings of some input value to some output value. Give me an apple, I'll give you an orange. Give me some money, I'll give you a cake. Since everything is a mapping, haskell uses something called a "lambda" expression to describe them succinctly.
 
 ```haskell
 \ x y z -> x y (x z) 
@@ -135,7 +135,7 @@ Here, we could map something like "Pie" to "Pie is the best!". What if we had a 
 
 Now, just because we haven't been writing out what the types of the inputs and outputs are explicitly, they have been there all along. Haskell is smart enough to figure out what you are talking about based on what you actually do with the inputs. For example, if you were to use `+` the compiler would know that your inputs had to be numbers because it doesn't make sense to add things which are not numbers.
 
-Because programmers are human, we like to not have to think as hard as the compiler when just reading the code. To this end, we can actually give names to our lambda values and also explicitly write out their types.
+Programmers are human, we like to not have to think as hard as the compiler when just reading the code. To this end, we can actually give names to our lambda values and also explicitly write out their types. Sometimes these even helps the compiler figure out what we mean if we are too ambiguous.
 
 The syntax for the type signature for a function called addOne which takes an Int and transforms it into an int would be:
 
@@ -143,13 +143,25 @@ The syntax for the type signature for a function called addOne which takes an In
 addOne :: Int -> Int
 addOne = \ x  -> x + 1
 ```
-The top line reads "addOne has the type Int to Int". The `::` is read as "has the type". Notice how the (->) symbol matches up with the arrow in the lambda. There is no rule that says they must visually line up, but I wanted to draw the parallel with how the arrow is used in the *value* of the lambda and the *type*.
+The top line reads "addOne has the type Int to Int". The `::` is read as "has the type". Notice how the (->) symbol matches up with the arrow in the lambda. There is no rule that says they must visually line up, but I've written them like this to draw the parallel with how the arrow is used in the *value* of the lambda and the *type*.
 
 ### Multiple Arguments
 
-- In order to pass multiple values into a function, you'll have to nest lambda functions
-- For example `(\x -> (\y -> x + y))`, which takes a value x and then transforms it into a lambda function which takes a value y and transforms it into the expression `x + y`
-- There is a shortcut for making a lambda with multiple arguemsnts `(\x y -> x + y)`
+So far we have only seen lambdas which take a single input, which is not always what we want. A simple example of a function which needs two inputs is `+`. However, we are restricted by the fact that lambdas can *only* represent mappings from a single input to a single output. Luckily, we can exploit the fact that in Haskell, lambdas are values just like anything else.
+
+In order to pass multiple values into a function, you'll have to nest lambda functions. For example:
+
+```haskell
+add = (\x -> (\y -> x + y))
+```
+
+`add` takes a value x and then transforms it into a lambda function which takes a value y and transforms it into the expression `x + y`. In other terms, we begin with a vague expression "some number plus some other number". Then once we know one of the numbers we can say something like "5 plus some number". This is more specific, but we still need more details to give a concrete result. The final input lets us say "5 plus 6" which can be reduce to it's answer "11".
+
+Writing our functions like this is cumbersome though, and there is a shortcut for making a lambda with multiple arguments.
+
+```haskell
+(\x y -> x + y)
+```
 
 
 ## Function Evaluation 
@@ -194,9 +206,11 @@ Multi-argument lambdas work in exactly the same way (since they are the same).
 
 So lambdas are evaluated, not so much as a series of steps, but rather as the mechanical replacing of symbols with inputs and then replacing the lambda with the result. This continues until you are only left with a value and can reduce no further, at which point the program is done!
 
-## Using Lambdas for the Game
+## Using Lambdas for Tic Tac Toe 
 
-A few math expressions and combining strings is all well and good, but how can we get from here to actually using lambdas to represent the game of tic tac toe? Indulge me for a moment as I get a bit philosophical, but isn't every action simply a mapping from some moment in the past to some moment in the future? Movies, as you probably know, are just a *ton* of pictures played rapidly, one after the other. The "action" of playing the movie is kinda just a mapping from some time to some picture. 0:00:00 maps to the start of the movie, 1:14:27 maps to some picture in the middle, and 11:23:59 maps to the last picture of the Lord of The Rings extended blue-ray.
+A few math expressions and combining strings is all well and good, but how can we get from here to actually using lambdas to represent the game of tic tac toe? 
+
+Indulge me for a moment as I get a bit philosophical, but isn't every action simply a mapping from some moment in the past to some moment in the future? Movies, as you probably know, are just a *ton* of pictures played rapidly, one after the other. The "action" of playing the movie is kinda just a mapping from some time to some picture. 0:00:00 maps to the start of the movie, 1:14:27 maps to some picture in the middle, and 11:23:59 maps to the last picture of the Lord of The Rings extended blue-ray.
 
 In this same way, video games can be thought of as mappings to pictures. However, video games use a combination of time and user input to determine what picture to give you. When playing mario, the character remains still until the character presses a button. The game then takes that input and gives you a new picture with mario moved slightly. 
 
@@ -206,7 +220,7 @@ For example: e4 e5, Qf3 f5, Bc4 fxe4, Qf7#
 
 That's a five move checkmate >:]
 
-We can use this list of moves idea in tac tic toe as well. For every move, we simply need to know who made the move and on what space they put that move. We can talk about specific spaces using coordinates like so:
+We could write a program to take our moves (the data) and map them to boards (our function). This is the approach we can use in tac tic toe as well. For every move, we simply need to know who made the move and on what space they put that move. We can talk about specific spaces using coordinates like so:
 
 ```haskell
 0,0 | 0,1 | 0,2
@@ -222,7 +236,7 @@ That's definitely a starting place, but tic tac toe is usually played by people 
 
 Sometimes, we want our mapping to change based on what is given to us. For example, if a customer has a discount, we want to give them the discounted prices instead of the normal ones. In order to make these kinds of choices, we'll need another type called `Bool`. There are only two possible values of a `Bool`: `True` or `False`. This allows us to say things like, "if it is true that the customer has a discount, then give the discounted prices, otherwise give the normal prices".
 
-An application near and dear to our hearts at the moment is whether or not to end the game. If one of the players has one or the board is full, end the game, otherwise give the next state of the board.
+An application near and dear to our hearts at the moment is whether or not to end the game. If one of the players has one or the board is full, end the game, otherwise give the next state of the board. In this case, whether or not a player has won can be represented with a `Bool`. Either someone has won or they have not. Along the same lines, whether the board is full is equally state by a simple `True` or `False`.
 
 ### Case Expressions
 
@@ -245,9 +259,10 @@ While this isn't the best way to solve the problem of dividing by zero, we can p
 Like multi-arguement functions there is a shorthand way to write case expressions that choose results based on a `Bool` value:
 
 ```haskell
-(\x y -> if isZero y then 0 else x /y)
+(\x y -> if isZero y then 0 else x / y)
 ```
-- Which reads a bit better than the case expression
+
+Which reads a better than the case expression.
 
 ### Basic Comparisons
 - There are some built in functions which deal with generating True or False values. These "logic" and "comparison" operators are as follows
@@ -260,7 +275,7 @@ Like multi-arguement functions there is a shorthand way to write case expression
 
 ## Food for thought 
 
-What happens if you don't give a function all of it's inputs? Remember that evaluation just supsitutes the values one at a time. There is no reason stopping half way should break anything.
+What happens if you don't give a function all of it's inputs? Remember that evaluation just substitutes the values one at a time. There is no reason stopping half way should break anything.
 
 ```haskell
 (\x y -> x + y) 5
@@ -273,20 +288,50 @@ What happens if you don't give a function all of it's inputs? Remember that eval
 
 - If you have a bunch of functions applied to eachother (a (b (c (d input)))), you can rewrite it without the parenthesis using the ($) function. So `a $ b $ c $ d $ input`
 
-- Lambdas are data types just like String, Int, and Bool, is there a way to add them?
+## Composition
+
+Part of the power from functional programming is that lambdas, usually used to represent the actions of a program, can also be considered data just like String, Int, and Bool. We've already seen functions that can return other functions, so it goes without saying that perhaps we can do more with them.
+
+Drawing again on the connection between human language and programming, we often use other words to change the effect or meaning of our verbs.
+
+- He flew quickly. 
+- She skipped joyfully. 
+- They sighed with relief.
+
+In Haskell we'll come to find many ways to modify our functions with *adverbs*, but for the moment, let's consider if we can chain a bunch of actions using something similar to "then".
+
+In order to eat the noodles you'll have to heat *and then* stir *and then* blow on them.
+
+If we have a bunch of actions we want to perform on some data, one after the other, and functions are data, then perhaps we don't have to write giant functions that do everything all at once. Perhaps we can write the little functions by themselves and then... add them?
+
 ```haskell
 (\g f -> (\x -> g (f x)))
 ```
 
-There is already a function that does this called (.)
+This is a function which implements *and then*. It takes two functions and makes a new function that takes the input, gives it to the second function and then the result to the first. This gives us the power to solve our problems one step at a time, and then combine the results when we are finished!
+
+This idea is foundational to functional programming, so Haskell defines a special function for it called `.`
+
+So
 
 ```haskell
-g . f = \x -> g (f x)
+eatNoodles :: Noodles -> Happiness
+eatNoodles = \noodles -> blowOn (stir (heat noodles))
 ```
 
-- From before with many functions applied to the results of other functions we can rewrite to something like this: `a . b . c . d $ input`
-  - Here, everything to the left of $ is the composition of a, b, c, and d
-  - The input value will flow left through each of these functions, getting transformed by each
+can be written as
+
+```haskell
+eatNoodles :: Noodles -> Happiness
+eatNoodles = blowOn . stir . heat
+```
+
+- In order to apply these combined functions we can write something like this: `a . b . c . d $ input`
+  - Here, everything to the left of `$` is the composition of a, b, c, and d
+
+There are two ways to think about how evaluating this new "composed" function works.
+
+Either the input value will flow left through each of these functions, getting transformed by each
 
 ```haskell
 (\x -> x + 1) . (\x -> x + 2) . (\x -> x + 3) $ 5
@@ -297,6 +342,25 @@ g . f = \x -> g (f x)
 (8 + 2) + 1
 10 + 1
 11
+```
+
+Or the functions get combined and the input is added to last
+
+```haskell
+(\x -> x + 1) . (\x -> x + 2) . (\x -> x + 3) $ 5
+(\x -> x + 1) . (\x -> (x + 3) + 2) $ 5
+(\x -> ((x + 3) + 2) + 1) $ 5
+(\5 -> ((5 + 3) + 2) + 1) 
+(5 + 3) + 2) + 1 
+(8 + 2) + 1 
+10 + 1 
+11
+```
+
+This can be done with parenthesis as well, but it often looks nicer to use `$` (which is just another function btw).
+
+```haskell
+$ = \f x -> f x
 ```
 
 # Creating New Types
@@ -374,7 +438,7 @@ data Computer
 
 So Computer is *either* a `Desktop` *or* a `Phone`.
 
-In order to work with product types you'll need to use case expressions because you can't know exactly which version of Computer it is beforehand.
+In order to work with sum types you'll need to use case expressions because you can't know exactly which version of Computer it is beforehand.
 
 ```haskell
 upgrade :: Computer -> Computer
@@ -442,7 +506,98 @@ helloWorld Haksell = "print \"Hello world\""
 
 In my opinion, this looks much nicer.
 
-## Representing the Game
+# Generic Types
+
+It is possible to create a new type which wraps any type.
+
+```haskell
+data Wrap a = Wrap a
+```
+
+Not very exciting, except for the lowercase a on the left side of the equals.
+This is a *type* parameter to the data. Just as functions are able take values,
+types can also take parameters to create new types.
+
+```haskell
+wrappedInt :: Wrap Int
+wrappedInt = Wrap 5
+
+wrappedChar :: Wrap Char
+wrappedChar = Wrap 'c'
+
+wrappedBool :: Wrap Bool
+wrappedBool = Wrap False
+```
+
+The `Wrap a` type isn't very useful since it really only acts like a super `newtype`, however there is a type similar to it which is useful.
+
+### Maybe
+
+```haskell
+data Maybe a = Just a | Nothing
+```
+
+Maybe is useful for encoding the possibility of failure within your program. For example, what happens when you divide by zero? Perhaps we could use a `Bool` to "catch" the case when the user gives a 0.
+
+```haskell
+division x y :: Int -> Int -> Int
+division x 0 = ???
+division x y = x / y
+```
+
+There's a problem. What exactly do we return if they divide by zero? Maybe we could give some random value like `-1`, but that's a valid result for other values. And we can't just return *nothing* because in Haskell if the type says it returns an `Int` it *must* return an `Int`. No if, and, or but will save us from this.
+
+Keen eyes will notice that `Maybe` has a value called `Nothing`. It turns out that this is exactly what we need to fill in the blanks. In lesser languages this exceptional cause would crash the program, but if you wrap the return type of division with `Maybe` you can deal with the fact that it fails and return the nothing which makes sense!
+
+```haskell
+division :: Int -> Int -> Maybe Int
+division x 0 = Nothing
+division x y = Just (x `div` y)
+```
+
+Now, there will never be any divison by zero. If zero is given for `y`, the result will be Nothing and the program can continue.
+
+# Typeclasses 
+
+In your experiments with haskell so far you might have noticed strange functions like `print :: Show a => a -> IO ()` or `(+) :: Num a => a -> a -> a`
+
+As we learned previously, the lowercase types are type parameters. Which means that they could be any type. Often times, you can't do much with a completely generic type. For example the type `(a -> a)` only has one function associated with it, `id`.
+
+In order to make generic functions more useful, we can define what is called a `typeclass`. Type classes are ways of ensure that generic types support certain functions. The simplest of these is the `Show` typeclass.
+
+### Show
+
+```haskell
+class Show a where
+  show :: a -> String
+```
+
+This creates a new type class. Any type which is a part of `Show` *must* define a version of the function `show` for that type.
+
+```haskell
+instance Show OS where
+  show MACOS = "MACOS"
+  show WINDOWS = "WINDOWS"
+  show LINUX = "LINUX"
+```
+
+When you want to add a type to a type class, you must make an `instance` of all the functions for that class. Above we defined show for the `OS` type from earlier.
+
+### Eq
+
+Another useful type class is `Eq` which means that values within that type can be compared.
+
+```haskell
+instance Eq Os where
+  MACOS == MACOS = True
+  WINDOWS == WINDOWS = True
+  LINUX == LINUX = True
+  _ == _ = False
+``` 
+
+In the above example, we define what it means for two `OS` values to be equal.
+
+## Representing Moves 
 
 Types let you encode objects from the real world into your program where you can work with them. Product types represent a collection of values while Sum types can be one of many different types.
 
@@ -459,19 +614,27 @@ data Move = Move
 
 ```
 
-# Generating Lists
+# Lists
+
+Earlier we skirted over the fact that a `String` was a collection of `Char` values, but now it's time to be a bit more specific about what that means. Given that collections are very handy tools to use when describing the world and the things that happen in it, we want some way to represent collections in our data. We can create collections or *lists* of things using a generic data type.
+
+```haskell
+data [a] = a : [a] | []
+```
+
+So a list is either an element with another list or an empty list.
 
 ```haskell
 [1..]
 ```
 
-This is the notation for defining a list of all numbers from 1 to infinity.
+This is the notation for defining a list of all numbers from 1 to infinity. The numbers aren't actually created until they are needed though. So if you only end up using the first 100, then it will only make the fist 100. Be careful with infinite lists because you might accidentally write something that uses all of them and then your program will never finish!
 
 ```haskell
 take :: Int -> [a] -> [a]
 ```
 
-Gives a list with only the first n elements of the list.
+Gives a list with only the first n elements of the list. A common tool to specify how much of an infinite list you actually want to use.
 
 ```haskell
 takeWhile :: (a -> Bool) -> [a] -> [a]
@@ -670,96 +833,7 @@ printBoard :: [Move] -> IO ()
 printBoard = mapM_ putStrLn . showBoard . filledBoard
 ```
 
-# Generic Types
 
-It is possible to create a new type which wraps any type.
-
-```haskell
-data Wrap a = Wrap a
-```
-
-Not very exciting, except for the lowercase a on the left side of the equals.
-This is a *type* parameter to the data. Just as functions are able take values,
-types can also take parameters to create new types.
-
-```haskell
-wrappedInt :: Wrap Int
-wrappedInt = Wrap 5
-
-wrappedChar :: Wrap Char
-wrappedChar = Wrap 'c'
-
-wrappedBool :: Wrap Bool
-wrappedBool = Wrap False
-```
-
-The `Wrap a` type isn't very useful since it really only acts like a super `newtype`, however there is a type similar to it which is useful.
-
-### Maybe
-
-```haskell
-data Maybe a = Just a | Nothing
-```
-
-Maybe is useful for encoding the possibility of failure within your program. For example, what happens when you divide by zero? Normall this will just crash the program, but if you wrap the return type of division with `Maybe` you can deal with the fact that it fails.
-
-```haskell
-division :: Int -> Int -> Maybe Int
-division x 0 = Nothing
-division x y = Just (x `div` y)
-```
-
-Now, there will never be any divison by zero. If zero is given for `y`, the result will be Nothing and the program can continue.
-
-### List
-
-Lists are actually defined as a generic data type as well, which isn't all that suprising given that we can have a list of anything.
-
-```haskell
-data [a] = a : [a] | []
-```
-
-So a list is either an element with another list or an empty list.
-
-# Typeclasses 
-
-In your experiments with haskell so far you might have noticed strange functions like `print :: Show a => a -> IO ()` or `(+) :: Num a => a -> a -> a`
-
-As we learned previously, the lowercase types are type parameters. Which means that they could be any type. Often times, you can't do much with a completely generic type. For example the type `(a -> a)` only has one function associated with it, `id`.
-
-In order to make generic functions more useful, we can define what is called a `typeclass`. Type classes are ways of ensure that generic types support certain functions. The simplest of these is the `Show` typeclass.
-
-### Show
-
-```haskell
-class Show a where
-  show :: a -> String
-```
-
-This creates a new type class. Any type which is a part of `Show` *must* define a version of the function `show` for that type.
-
-```haskell
-instance Show OS where
-  show MACOS = "MACOS"
-  show WINDOWS = "WINDOWS"
-  show LINUX = "LINUX"
-```
-
-When you want to add a type to a type class, you must make an `instance` of all the functions for that class. Above we defined show for the `OS` type from earlier.
-
-### Eq
-
-Another useful type class is `Eq` which means that values within that type can be compared.
-
-```haskell
-instance Eq Os where
-  MACOS == MACOS = True
-  WINDOWS == WINDOWS = True
-  LINUX == LINUX = True
-  _ == _ = False
-``` 
-
-In the above example, we define what it means for two `OS` values to be equal.
 
 ## Checking for Winner
 
