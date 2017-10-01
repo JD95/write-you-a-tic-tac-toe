@@ -63,7 +63,7 @@ The initial problem of programming is figuring out how to represent your problem
 - Types can be used to build up a representation of something in the real world
 - We can thus "encode" real things into our programs
 
-# Lambdas (Meta)
+# Lambdas
 
 Lambdas represent transformations from values of one type to values of another.
 
@@ -288,7 +288,7 @@ Given some list, create an infinite list with the inital list repeating.
 - Iterate lets us generate arithmetic and geometric sequences
 - You can use individual elements and simple rules to generate finite and infinte lists of values. Often times, this will be your method of setting up other functions.
 
-# Transforming Lists (Meta)
+# Transforming Lists
 
 ```haskell
 map :: (a -> b) -> [a] -> [b]
@@ -569,14 +569,14 @@ This is a *type* parameter to the data. Just as functions are able take values,
 types can also take parameters to create new types.
 
 ```haskell
-    wrappedInt :: Wrap Int
-    wrappedInt = Wrap 5
+wrappedInt :: Wrap Int
+wrappedInt = Wrap 5
 
-    wrappedChar :: Wrap Char
-    wrappedChar = Wrap 'c'
+wrappedChar :: Wrap Char
+wrappedChar = Wrap 'c'
 
-    wrappedBool :: Wrap Bool
-    wrappedBool = Wrap False
+wrappedBool :: Wrap Bool
+wrappedBool = Wrap False
 ```
 
 The `Wrap a` type isn't very useful since it really only acts like a super `newtype`, however there is a type similar to it which is useful.
@@ -590,9 +590,9 @@ data Maybe a = Just a | Nothing
 Maybe is useful for encoding the possibility of failure within your program. For example, what happens when you divide by zero? Normall this will just crash the program, but if you wrap the return type of division with `Maybe` you can deal with the fact that it fails.
 
 ```haskell
-    division :: Int -> Int -> Maybe Int
-    division x 0 = Nothing
-    division x y = Just (x `div` y)
+division :: Int -> Int -> Maybe Int
+division x 0 = Nothing
+division x y = Just (x `div` y)
 ```
 
 Now, there will never be any divison by zero. If zero is given for `y`, the result will be Nothing and the program can continue.
@@ -622,17 +622,17 @@ In order to make generic functions more useful, we can define what is called a `
 ### Show
 
 ```haskell
-    class Show a where
-        show :: a -> String
+class Show a where
+  show :: a -> String
 ```
 
 This creates a new type class. Any type which is a part of `Show` *must* define a version of the function `show` for that type.
 
 ```haskell
-    instance Show OS where
-        show MACOS = "MACOS"
-        show WINDOWS = "WINDOWS"
-        show LINUX = "LINUX"
+instance Show OS where
+  show MACOS = "MACOS"
+  show WINDOWS = "WINDOWS"
+  show LINUX = "LINUX"
 ```
 
 When you want to add a type to a type class, you must make an `instance` of all the functions for that class. Above we defined show for the `OS` type from earlier.
@@ -642,25 +642,11 @@ When you want to add a type to a type class, you must make an `instance` of all 
 Another useful type class is `Eq` which means that values within that type can be compared.
 
 ```haskell
-    instance Eq Os where
-        MACOS == MACOS = True
-        WINDOWS == WINDOWS = True
-        LINUX == LINUX = True
-        _ == _ = False
+instance Eq Os where
+  MACOS == MACOS = True
+  WINDOWS == WINDOWS = True
+  LINUX == LINUX = True
+  _ == _ = False
 ``` 
 
 In the above example, we define what it means for two `OS` values to be equal.
-
-## Integration
-
-Type classes can also be used in the context of creating a data type.
-
-```haskell
-data Show a => User a = User {name :: a, posts :: [String]}
-```
-
-Although this is a contrived example, it shows how we can restrict the types used in generic data types.
-
-## Synthesis
-
-Generic types allow us to create general and abstract representations of our data and type classes allow us to ensure certain capabilities of the generic types.
