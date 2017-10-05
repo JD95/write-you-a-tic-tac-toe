@@ -845,25 +845,25 @@ getPlayerMove player moves = do
 ## Putting It All Together
 
 ```haskell
-turn :: Space -> Space -> StateT [Move] IO Space
+turn :: Space -> Space -> [Move] -> IO ([Move], Space)
 -- ^ Represents a single player turn
-turn player E = do
-  moves <- get
-  lift $ printBoard moves
-  move <- lift $ getPlayerMove player moves
-  put $ move:moves
-  return $ gameOver player (move:moves)
-turn _ winner = pure winner
+turn player E moves = do
+  printBoard moves
+  move <- getPlayerMove player moves
+  pure $ gameOver player (move:moves)
+turn _ winner moves = pure (moves, winner)
 
 playerTurns :: [Space]
 -- ^ Creates a list of alternating X and O turns
 playerTurns = take (boardSize^2) $ cycle [X, O]
 
-game :: StateT [Move] IO Space
+game :: [Move] -> IO ([Move], Space)
 -- ^ Assigns the turns a player, composes the turns
 game = foldr1 (<=<) (map turn playerTurns) E
 
 main :: IO ()
 -- ^ evaluates the game starting with no moves and prints the winner
-main = evalStateT game [] >>= print . (++) "Winner is " . show
+main = do
+  (_, winner) <- game [] 
+  print . (++) "Winner is " . show $ winner
 ```
