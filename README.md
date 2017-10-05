@@ -637,40 +637,10 @@ take :: Int -> [a] -> [a]
 Gives a list with only the first n elements of the list. A common tool to specify how much of an infinite list you actually want to use.
 
 ```haskell
-takeWhile :: (a -> Bool) -> [a] -> [a]
-```
-
-Uses elements from the front of the list while the predicate is satisfied.
-
-```haskell
 drop :: Int -> [a] -> [a]
 ```
 
 Gives a list without the first n elements.
-
-```haskell
-dropWhile :: (a -> Bool) -> [a] -> [a]
-```
-
-Uses elements from the front of the list while the predicate is satisfied.
-
-```haskell
-iterate :: (a -> a) -> a -> [a]
-```
-
-Uses a some function and iterates it on the initial value a.
-
-```haskell
-repeat :: a -> [a]
-```
-
-An infinite list with repeating values of a.
-
-```haskell
-replicate :: Int -> a -> [a]
-```
-
-A finite list with repeating values of a.
 
 ```haskell
 cycle :: [a] -> [a]
@@ -712,28 +682,10 @@ intersperse :: a -> [a] -> [a]
 A list with some value placed between each element.
 
 ```haskell
-intercalate :: [a] -> [[a]] -> [a]
-```
-
-A list with another list placed between each element.
-
-```haskell
 transpose :: [[a]] -> [[a]]
 ```
 
 Rotates a list of lists. A 3x2 list becomes a 2x3.
-
-```haskell
-subsequences :: [a] -> [[a]]
-```
-
-All possible subsequences of a list
-
-```haskell
-permutations :: [a] -> [[a]]
-```
-
-All possible permutations of the elements of a list.
 
 ## Food for thought
 - map and filter can be used "query" lists
@@ -789,12 +741,6 @@ mapM_ :: (a -> IO b) -> [a] -> IO ()
 
 Perform an `IO` action using every element of a list.
 
-```haskell
-forM_ :: [a] -> (a -> IO b) -> IO ()
-```
-
-The same as `mapM_` but with the arugements flipped.
-
 ## Food For Thought 
 
 Folds can collapse a list down to a single result, but they can also be thought of as "sequencing" events, as in forM_ and mapM_. So lists are not only a means of holding "values", but also a means of structuring the execution of IO actions.
@@ -832,8 +778,6 @@ printBoard :: [Move] -> IO ()
 -- ^ Prints the board one row at a time
 printBoard = mapM_ putStrLn . showBoard . filledBoard
 ```
-
-
 
 ## Checking for Winner
 
