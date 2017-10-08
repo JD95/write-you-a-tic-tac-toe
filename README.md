@@ -273,22 +273,17 @@ Which reads a better than the case expression.
 - `&&` means logical and, it takes two Booleans and, if they are both True, also returns true (anything else is False)
 - `||` means logical or, it takes two Bool values and if either are True it will return True, False otherwise
 
-## Food for thought 
+## Using Comparisons for Tic Tac Toe
 
-What happens if you don't give a function all of it's inputs? Remember that evaluation just substitutes the values one at a time. There is no reason stopping half way should break anything.
+One of the problems we have to solve when making tic tac toe is going to be telling the difference between the symbol for `X` and the symbol for `O`. Knowing what we just learned, if we have a type which supports comparison, we can use functions like `==` to give us a `Bool` indicating if they are the same.
 
 ```haskell
-(\x y -> x + y) 5
-(\5 y -> 5 + y)
+"X" == "O"
 ```
 
-- Given that functions like `+` and `||` are still *just* functions, we can do the same for them
+This would reduce to `False` given both sides are different.
 
-`(5 +) = ((+) 5) = (\x -> 5 + x)`
-
-- If you have a bunch of functions applied to eachother (a (b (c (d input)))), you can rewrite it without the parenthesis using the ($) function. So `a $ b $ c $ d $ input`
-
-## Composition
+# Composition
 
 Part of the power from functional programming is that lambdas, usually used to represent the actions of a program, can also be considered data just like String, Int, and Bool. We've already seen functions that can return other functions, so it goes without saying that perhaps we can do more with them.
 
@@ -362,6 +357,22 @@ This can be done with parenthesis as well, but it often looks nicer to use `$` (
 ```haskell
 $ = \f x -> f x
 ```
+
+## Food for thought 
+
+What happens if you don't give a function all of it's inputs? Remember that evaluation just substitutes the values one at a time. There is no reason stopping half way should break anything.
+
+```haskell
+(\x y -> x + y) 5
+(\5 y -> 5 + y)
+```
+
+- Given that functions like `+` and `||` are still *just* functions, we can do the same for them
+
+`(5 +) = ((+) 5) = (\x -> 5 + x)`
+
+- If you have a bunch of functions applied to eachother (a (b (c (d input)))), you can rewrite it without the parenthesis using the ($) function. So `a $ b $ c $ d $ input`
+
 
 # Creating New Types
 
@@ -459,7 +470,7 @@ data OS = MACOS | WINDOWS | LINUX
 
 Useful anytime you need to have several options and want to encode them directly instead of using something like `Int` or `String` to do so indirectly.
 
-## Integration
+## Useful Shortcuts 
 
 As your types become more complicated, you code becomes uglier and harder to read. Luckily, Haskell provides some useful shortcuts for dealing with complex data types.
 
@@ -506,9 +517,33 @@ helloWorld Haksell = "print \"Hello world\""
 
 In my opinion, this looks much nicer.
 
+## Representing Moves For Tic Tac Toe 
+
+Now that we understand how to make our own types, we can begin to describe the nouns of the game more exactly. For example, there are only three possible states that any space on the board could be: empty, taken by player `X`, or taken by player `O`. Since a space could be something *or* something else, we can represent that with a sum type.
+
+```haskell
+-- The symbols the board can be marked with
+data Space = E | X | O deriving (Eq, Show)
+```
+
+Given a `Space` we can now represent a move!
+
+```haskell
+data Move = Move
+  { moveRow::Int
+  , moveCol::Int
+  , moveSymbol::Space
+  } deriving (Eq, Show)
+
+```
+
+These types are a start, but we'll need something a bit more expressive to be able to describe the entire board.
+
 # Generic Types
 
-It is possible to create a new type which wraps any type.
+Haskell's draws most of it's power, not from functions, but actually from its types. Instead of just being able to talk about combinations of existing types, we can actually create new types which don't really mind what they are combinations of. These types don't so much define data as they do a "structure" or a "shape". 
+
+For example, it is possible to create a new type which wraps any type.
 
 ```haskell
 data Wrap a = Wrap a
@@ -537,7 +572,11 @@ The `Wrap a` type isn't very useful since it really only acts like a super `newt
 data Maybe a = Just a | Nothing
 ```
 
-Maybe is useful for encoding the possibility of failure within your program. For example, what happens when you divide by zero? Perhaps we could use a `Bool` to "catch" the case when the user gives a 0.
+This type `Maybe` is a fancy `newtype` except it also adds on another value `Nothing`. In terms of what `Maybe` can represent, it's basically everything `a` can *in addition to* that `Nothing` value.
+
+If we used `Maybe Bool` we can now represent three possible values: `True`, `False`, and `Nothing`. What does this mean exactly? Well consider a magic mirror that tells you, `True` or `False`, if you are the farest in all the land. If the magic face in the mirror was on break then you wouldn't be able to get an answer. We could represent this possibility with `Nothing`. It's neither `True` or `False` its just no answer.
+
+In this way maybe is useful for encoding the possibility of failure within our programs. For example, what happens when you divide by zero? Perhaps we could use some pattern matching to "catch" the case when the user gives a 0.
 
 ```haskell
 division x y :: Int -> Int -> Int
@@ -547,7 +586,7 @@ division x y = x / y
 
 There's a problem. What exactly do we return if they divide by zero? Maybe we could give some random value like `-1`, but that's a valid result for other values. And we can't just return *nothing* because in Haskell if the type says it returns an `Int` it *must* return an `Int`. No if, and, or but will save us from this.
 
-Keen eyes will notice that `Maybe` has a value called `Nothing`. It turns out that this is exactly what we need to fill in the blanks. In lesser languages this exceptional cause would crash the program, but if you wrap the return type of division with `Maybe` you can deal with the fact that it fails and return the nothing which makes sense!
+Nothing to the rescue!
 
 ```haskell
 division :: Int -> Int -> Maybe Int
@@ -559,20 +598,31 @@ Now, there will never be any divison by zero. If zero is given for `y`, the resu
 
 # Typeclasses 
 
-In your experiments with haskell so far you might have noticed strange functions like `print :: Show a => a -> IO ()` or `(+) :: Num a => a -> a -> a`
+Generic types are nice, but on their own they aren't all that interesting. Infact, there is very little we can actually *do* with generic types given that we don't know ahead of type what types are inside of them.
 
-As we learned previously, the lowercase types are type parameters. Which means that they could be any type. Often times, you can't do much with a completely generic type. For example the type `(a -> a)` only has one function associated with it, `id`.
+For example, there is only *one* possible definition for the function `id`.
 
-In order to make generic functions more useful, we can define what is called a `typeclass`. Type classes are ways of ensure that generic types support certain functions. The simplest of these is the `Show` typeclass.
+```haskell
+id :: a -> a
+id x = x
+```
+
+That's it! There is literally nothing else we can do with the value given to `id` because we know nothing else about it. Generics like this are too abstract to do much with, so it would be nice if we could be a bit less ambiguous about the types we were using.
+
+To achieve this we can define what is called a `typeclass`. Type classes are ways of ensure that generic types support certain functions before we can use them with a function. The simplest of these is the `Show` typeclass.
 
 ### Show
+
+It is a useful property of any type to be convertable into a `String`. Whether we are trying to display values in a console or we are saving information to a file, types generally need to be stringable.
+
+So lets make a type class for this property!
 
 ```haskell
 class Show a where
   show :: a -> String
 ```
 
-This creates a new type class. Any type which is a part of `Show` *must* define a version of the function `show` for that type.
+This defines the new type class. Any type which is a part of `Show` *must* define a version of the function `show` for that type.
 
 ```haskell
 instance Show OS where
@@ -582,6 +632,22 @@ instance Show OS where
 ```
 
 When you want to add a type to a type class, you must make an `instance` of all the functions for that class. Above we defined show for the `OS` type from earlier.
+
+With very simple type classes like `Show`, the Haskell compiler is actually smart enough to define these instances for us.
+
+```haskell
+-- The symbols the board can be marked with
+data Space = E | X | O deriving (Show)
+
+data Move = Move
+  { moveRow::Int
+  , moveCol::Int
+  , moveSymbol::Space
+  } deriving (Show)
+
+```
+
+The `deriving` at the end of the type definition tells the compiler, "please figure out how to make this type an instance of `Show`". For most types we define, the compiler should be able to happily oblige.
 
 ### Eq
 
@@ -595,28 +661,15 @@ instance Eq Os where
   _ == _ = False
 ``` 
 
-In the above example, we define what it means for two `OS` values to be equal.
+In the above example, we define what it means for two `OS` values to be equal. And of course, the compiler can figure this one out as well.
 
-## Representing Moves 
-
-Types let you encode objects from the real world into your program where you can work with them. Product types represent a collection of values while Sum types can be one of many different types.
-
-
-```haskell
--- The symbols the board can be marked with
-data Space = E | X | O deriving (Eq, Show)
-
-data Move = Move
-  { moveRow::Int
-  , moveCol::Int
-  , moveSymbol::Space
-  } deriving (Eq, Show)
-
-```
+Show now we have a way to convert our `Space` values into `String` values for displaying. In order to actually create the board though, we'll need one more type because we need the ability to talk about *many* `Space` values at the same time... or rather a list of `Spaces` values.
 
 # Lists
 
-Earlier we skirted over the fact that a `String` was a collection of `Char` values, but now it's time to be a bit more specific about what that means. Given that collections are very handy tools to use when describing the world and the things that happen in it, we want some way to represent collections in our data. We can create collections or *lists* of things using a generic data type.
+Earlier we skirted over the fact that a `String` was a collection of `Char` values, but now it's time to be a bit more specific about what that means.
+
+Given that collections are very handy tools to use when describing the world and the things that happen in it, we want some way to represent collections in our data. We can create collections or *lists* of things using a generic data type.
 
 ```haskell
 data [a] = a : [a] | []
@@ -780,6 +833,8 @@ printBoard = mapM_ putStrLn . showBoard . filledBoard
 ```
 
 ## Checking for Winner
+
+Given our knowledge of `List` and `Bool`, we can now check to see if someone has won the game yet.
 
 ```haskell
 lineWin :: [Space] -> Bool
