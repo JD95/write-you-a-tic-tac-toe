@@ -330,13 +330,15 @@ Either the input value will flow left through each of these functions, getting t
 
 ```haskell
 (\x -> x + 1) . (\x -> x + 2) . (\x -> x + 3) $ 5
-(\x -> x + 1) . (\x -> (x + 3) + 2) $ 5
-(\x -> ((x + 3) + 2) + 1) $ 5
-(\5 -> ((5 + 3) + 2) + 1)
-((5 + 3) + 2) + 1
-(8 + 2) + 1
-10 + 1
-11
+(\x -> x + 1) . (\x -> x + 2) $ (\5 -> 5 + 3) 
+(\x -> x + 1) . (\x -> x + 2) $ (5 + 3) 
+(\x -> x + 1) . (\x -> x + 2) $ 8 
+(\x -> x + 1) $ (\8 -> 8 + 2) 
+(\x -> x + 1) $ ( 8 + 2) 
+(\x -> x + 1) $ 10 
+(\10 -> 10 + 1) 
+(10 + 1) 
+11 
 ```
 
 Or the functions get combined and the input is added to last
