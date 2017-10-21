@@ -9,8 +9,8 @@ This project assumes knowledge of:
 - A text editor with Haskell supported ([Atom](https://atom.io/), [Emacs](https://www.gnu.org/software/emacs/), [Vim](https://vim.sourceforge.io/), [Visual Studio Code](https://code.visualstudio.com/))
 
 By the end of the project you'll have experience with:
-- Basic arithmetic
 - Basics of using stack (To build and test your code)
+- Basic arithmetic
 - Case statements and Pattern Matching
 - Control flow with booleans
 - Currying
@@ -24,7 +24,59 @@ By the end of the project you'll have experience with:
 - Representing Failure with Maybe
 - Type Signatures
 
-# Intro
+# Getting Started with Stack
+
+- Stack is a package manager for Haskell
+- The stack.yaml file configures the project
+
+### The .cabal File
+
+- The .cabal file configures what stack builds
+- To use libraries, look them up on [Hackage](https://hackage.haskell.org/) or [Stackage](https://www.stackage.org/).
+- Add the library name to the .cabal file under "build-depends"
+
+```
+name:                hello-world
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/bob/hello-world#readme
+author:              Bob
+maintainer:          bobthebuilder@bob.com 
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+extra-source-files:  README.md
+
+executable program
+  hs-source-dirs:      .
+  main-is:             Problems.hs
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5
+                     , text 
+  ghc-options:         -threaded -eventlog -O2 -rtsopts -with-rtsopts=-N
+```
+### Basic Stack Commands
+
+- To create a new project use
+> stack new <project name>
+- By default you get `app`, `src`, and `test` folders
+- `app` is the executable program with `main` inside
+- `src` is a library which the executable uses
+- `test` contains functions to test the library code
+- If you have never used stack on your machine before, then you must run
+> stack setup
+- This downloads the appropriate version of `GHC`, Haskell's compiler.
+- Stack will manage different versions of `GHC` for you.
+- To build an executable program run
+> stack build
+- To execute your program run
+> stack exec <executable name>
+- To load your program into GHCi use
+> stack ghci
+- IDE's will typically hook into stack ghci in order to give you syntax highlighting and compilation errors.
+
+# Intro To Types
 
 All real world problems have two things: nouns and verbs. We want *cars* to *drive themselves*. We want to *recognize* the *faces* in *pictures*. The process of programming involves converting the problems into a language that the computer can understand and act on. Unfortunately, computers aren't yet at the point to be able to completely understand human intent, so programmers still have jobs (for now). For example, how could we represent a person? Obviously we could model every *single* molecule in their body, but programmers are lazy and often the problems we solve don't care about *that* level of specificity. Lets think about what information you might use to describe a person you saw to someone else.
 
