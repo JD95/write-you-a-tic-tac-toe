@@ -59,7 +59,8 @@ executable program
 ### Basic Stack Commands
 
 - To create a new project use
-> stack new <project name>
+> stack new project-name
+- the name must either be camelCase or use `-`, no spaces.
 - By default you get `app`, `src`, and `test` folders
 - `app` is the executable program with `main` inside
 - `src` is a library which the executable uses
